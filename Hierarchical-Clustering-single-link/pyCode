@@ -21,3 +21,7 @@ for i in range(0,112) :
     row = data[i]
     #print row
     #print row[0], ", ", row[1]
+
+#build up a queue of shortest edges
+weightedQueue = []
+for vertex in range(len(data))
