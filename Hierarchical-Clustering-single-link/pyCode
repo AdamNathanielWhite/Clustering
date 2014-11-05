@@ -1,4 +1,6 @@
 import csv
+import Queue
+import math
 
 data = []
 i=0
@@ -24,4 +26,16 @@ for i in range(0,112) :
 
 #build up a queue of shortest edges
 weightedQueue = []
-for vertex in range(len(data))
+w = Queue.PriorityQueue(maxsize=0)
+for Avertex in range(0,112) :
+    for Bvertex in range(Avertex+1, 112) :
+        dist = math.sqrt(math.pow(data[Bvertex][0] - data[Avertex][0], 2) + math.pow(data[Bvertex][1] - data[Avertex][1], 2))
+        #print data[Bvertex][1], "-", data[Avertex][1], "=", data[Bvertex][1] - data[Avertex][1]
+        #print "square(", data[Bvertex][1], "-", data[Avertex][1], ") =", math.pow(data[Bvertex][1] - data[Avertex][1], 2)
+        tuple = [dist, Avertex, Bvertex]
+        w.put(tuple)
+        #w.put(dist, Avertex, Bvertex)
+        #print "pair", data[Avertex], "with", data[Bvertex], "dist =", dist
+
+for i in range(100000) :
+    print w.get()
