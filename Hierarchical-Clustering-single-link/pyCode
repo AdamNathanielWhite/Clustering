@@ -1,0 +1,14 @@
+import csv
+
+data = [110]
+i=0
+with open('points.csv', 'rb') as csvfile:
+    pointsreader = csv.reader(csvfile, delimiter='	', quotechar='|')
+    for row in pointsreader:
+        arr = [0,0]
+        arr[0] = int(row[0])
+        arr[1] = int(row[1])
+        #print arr[0], ", ", arr[1]
+        data.append(arr)
+        i = i+1
+#TODO: add list comprehension for loop to print the data. (as a test)
