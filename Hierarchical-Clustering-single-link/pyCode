@@ -37,5 +37,6 @@ for Avertex in range(0,112) :
         #w.put(dist, Avertex, Bvertex)
         #print "pair", data[Avertex], "with", data[Bvertex], "dist =", dist
 
+#add segments to the trees and insert back into the queue
 for i in range(100000) :
     print w.get()
