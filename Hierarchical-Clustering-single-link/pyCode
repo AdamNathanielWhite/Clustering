@@ -2,8 +2,10 @@ import csv
 import Queue
 import math
 
+k = 2 #number of clusters
+
 data = []
-i=0
+n=0
 with open('points.csv', 'rb') as csvfile:
     pointsreader = csv.reader(csvfile, delimiter='	', quotechar='|')
     for row in pointsreader:
@@ -12,14 +14,14 @@ with open('points.csv', 'rb') as csvfile:
         arr[1] = int(row[1])
         #print arr[0], ", ", arr[1]
         data.append(arr)
-        i = i+1
+        n += 1
         
 #sample for loop to iterate through the list
 for i in range(len(data)) :
     row = data[i]
     #print row
     #print row[0], ", ", row[1]
-for i in range(0,112) :
+for i in range(0,n) :
     row = data[i]
     #print row
     #print row[0], ", ", row[1]
@@ -27,8 +29,8 @@ for i in range(0,112) :
 #build up a queue of shortest edges
 weightedQueue = []
 w = Queue.PriorityQueue(maxsize=0)
-for Avertex in range(0,112) :
-    for Bvertex in range(Avertex+1, 112) :
+for Avertex in range(0,n) :
+    for Bvertex in range(Avertex+1, n) :
         dist = math.sqrt(math.pow(data[Bvertex][0] - data[Avertex][0], 2) + math.pow(data[Bvertex][1] - data[Avertex][1], 2))
         #print data[Bvertex][1], "-", data[Avertex][1], "=", data[Bvertex][1] - data[Avertex][1]
         #print "square(", data[Bvertex][1], "-", data[Avertex][1], ") =", math.pow(data[Bvertex][1] - data[Avertex][1], 2)
@@ -37,6 +39,48 @@ for Avertex in range(0,112) :
         #w.put(dist, Avertex, Bvertex)
         #print "pair", data[Avertex], "with", data[Bvertex], "dist =", dist
 
-#add segments to the trees and insert back into the queue
-for i in range(100000) :
-    print w.get()
+#table variable stores a table of connections
+table = []
+for i in range(0,n) :
+    row = []
+    for j in range(0,n) :
+        row.append(0)
+    table.append(row)
+
+
+#Both nodes are already in the table. Inquire to see whether they are in the same tree.
+#Use DFS depth first search to examine all nodes in the tree.
+def separateTrees(node1, node2) :
+    searchArray = [] #track which nodes we have already visited
+    for i in range(0, n) :
+        searchArray.append(0)
+
+    q = Queue.LifoQueue()
+    q.put(node1)
+    while q.empty() == 0 :
+        examine = q.get()
+        for i in range(0,n) :
+            if table[examine][i] == 1 : #follow all edges from examine node
+                if searchArray[i] == 0 : #only care about unchecked nodes
+                    q.put(i)
+        searchArray[examine] = 1
+        if examine == node2 :
+            return 0
+    return 1
+
+#add segments from the queue to trees
+#for i in range((n*(n-1))/2) :
+    #print w.get()
+numEdges = 0
+while numEdges < n :
+    edge = w.get()
+    node1 = edge[1]
+    node2 = edge[2]
+    #print "node1=",node1,"node2=",node2
+    if table[node1][node2] == 0 | table[node2][node1] == 0 | separateTrees(node1, node2) == 1 : #a node is not already in the table, or they are in separate trees
+        table[node1][node2] = 1
+        table[node2][node1] = 1
+        numEdges += 1
+                
+
+print "(done)"
